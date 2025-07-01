@@ -52,7 +52,7 @@ https://github.com/harshini-subbiah/POV-Display/blob/main/Circuit.jpg
 # 🤝 Contributing
 1. S Harini - https://github.com/harinisubbiah
    
-2.Kiran Sampath -
+ 2.Kiran Sampath -
 
-3.Krithikesh -  https://github.com/krithikeshI
+ 3.Krithikesh -  https://github.com/krithikeshI
 
