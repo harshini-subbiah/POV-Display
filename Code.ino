@@ -1,14 +1,17 @@
-//5x7 Bitmapping
-// === Pin Definitions ===
+// 5x7 with Bluetooth module 
+#include <SoftwareSerial.h>
+SoftwareSerial bluetooth(9, 10);  // RX = D9, TX = D10
+
 const int ledPins[7] = {2, 3, 4, 5, 6, 7, 8};
 const int irSensorPin = 12;
 
-// === Display Timing ===
-const float columnDelay =  1; // milliseconds per column
+const float columnDelay = 1; // milliseconds
 const int LETTER_WIDTH = 5;
 const int SPACE = 4;
 
-// === Row-wise Font: Space + A–Z (5x7 characters) ===
+char receivedMessage[50] = "HELLO";  // Default message
+int msgIndex = 0;
+
 const byte font[][7] = {
   // SPACE
   {B00000, B00000, B00000, B00000, B00000, B00000, B00000},
@@ -67,7 +70,6 @@ const byte font[][7] = {
   {B11111, B00001, B00010, B00100, B01000, B10000, B11111}
 };
 
-// === Convert char to font index ===
 int charToIndex(char c) {
   if (c == ' ') return 0;
   if (c >= 'A' && c <= 'Z') return c - 'A' + 1;
@@ -81,15 +83,29 @@ void setup() {
   }
 
   pinMode(irSensorPin, INPUT_PULLUP);
-  Serial.begin(9600);
-  Serial.println("POV display ready (5x7 font).");
+  bluetooth.begin(9600);
 }
 
 void loop() {
-  static bool waitingForIR = true;
+  // === Bluetooth Reception (Non-blocking) ===
+  while (bluetooth.available()) {
+    char incoming = bluetooth.read();
+    if (incoming == '\n') {
+      receivedMessage[msgIndex] = '\0';  // Null-terminate
+      msgIndex = 0;
+      bluetooth.print("Updated Message: ");
+      bluetooth.println(receivedMessage);
+    } else {
+      if (msgIndex < sizeof(receivedMessage) - 1) {
+        receivedMessage[msgIndex++] = toupper(incoming);
+      }
+    }
+  }
 
+  // === IR-triggered display ===
+  static bool waitingForIR = true;
   if (waitingForIR && digitalRead(irSensorPin) == LOW) {
-    displayMessage("KIRAN");
+    displayMessage(receivedMessage);
     waitingForIR = false;
   }
 
@@ -109,14 +125,16 @@ void displayMessage(const char* msg) {
       delay(columnDelay);
     }
 
-    displayColumn(0b0000000); // spacing
-    delay(columnDelay * SPACE);
+    for (int s = 0; s < SPACE; s++) {
+      displayColumn(0b0000000);
+      delay(columnDelay);
+    }
   }
 }
 
 void displayColumn(byte rowData) {
   for (int i = 0; i < 7; i++) {
-    digitalWrite(ledPins[i], bitRead(rowData, 6 - i)); // top to bottom
+    digitalWrite(ledPins[i], bitRead(rowData, 6 - i));
   }
 }
 
@@ -124,7 +142,7 @@ void transposeChar(const byte input[7], byte output[LETTER_WIDTH]) {
   for (int col = 0; col < LETTER_WIDTH; col++) {
     output[col] = 0;
     for (int row = 0; row < 7; row++) {
-      bool bit = bitRead(input[row], 4 - col); // Now 5 bits per row
+      bool bit = bitRead(input[row], 4 - col);
       bitWrite(output[col], 6 - row, bit);
     }
   }
