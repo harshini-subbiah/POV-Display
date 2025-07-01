@@ -1,70 +1,70 @@
-// 4X7 Bitmapping
+//5x7 Bitmapping
 // === Pin Definitions ===
 const int ledPins[7] = {2, 3, 4, 5, 6, 7, 8};
 const int irSensorPin = 12;
 
 // === Display Timing ===
-const int columnDelay = 2; // milliseconds per column
-const int LETTER_WIDTH = 4;  // changed from 7 to 4
-const int SPACE = 1;
+const float columnDelay =  1; // milliseconds per column
+const int LETTER_WIDTH = 5;
+const int SPACE = 4;
 
-// === Row-wise Font: Space + A–Z (4x7 characters) ===
+// === Row-wise Font: Space + A–Z (5x7 characters) ===
 const byte font[][7] = {
   // SPACE
-  {B0000, B0000, B0000, B0000, B0000, B0000, B0000},
+  {B00000, B00000, B00000, B00000, B00000, B00000, B00000},
 
   // A
-  {B0110, B1001, B1001, B1111, B1001, B1001, B1001},
+  {B01110, B10001, B10001, B11111, B10001, B10001, B10001},
   // B
-  {B1110, B1001, B1001, B1110, B1001, B1001, B1110},
+  {B11110, B10001, B10001, B11110, B10001, B10001, B11110},
   // C
-  {B0111, B1000, B1000, B1000, B1000, B1000, B0111},
+  {B01111, B10000, B10000, B10000, B10000, B10000, B01111},
   // D
-  {B1110, B1001, B1001, B1001, B1001, B1001, B1110},
+  {B11110, B10001, B10001, B10001, B10001, B10001, B11110},
   // E
-  {B1111, B1000, B1000, B1110, B1000, B1000, B1111},
+  {B11111, B10000, B10000, B11110, B10000, B10000, B11111},
   // F
-  {B1111, B1000, B1000, B1110, B1000, B1000, B1000},
+  {B11111, B10000, B10000, B11110, B10000, B10000, B10000},
   // G
-  {B0111, B1000, B1000, B1011, B1001, B1001, B0111},
+  {B01111, B10000, B10000, B10111, B10001, B10001, B01111},
   // H
-  {B1001, B1001, B1001, B1111, B1001, B1001, B1001},
+  {B10001, B10001, B10001, B11111, B10001, B10001, B10001},
   // I
-  {B0110, B0010, B0010, B0010, B0010, B0010, B0110},
+  {B11111, B00100, B00100, B00100, B00100, B00100, B11111},
   // J
-  {B0001, B0001, B0001, B0001, B1001, B1001, B0110},
+  {B11111, B00100, B00100, B00100, B10100, B10100, B11100},
   // K
-  {B1001, B1010, B1100, B1000, B1100, B1010, B1001},
+  {B10001, B10010, B10100, B11000, B10100, B10010, B10001},
   // L
-  {B1000, B1000, B1000, B1000, B1000, B1000, B1111},
+  {B10000, B10000, B10000, B10000, B10000, B10000, B11111},
   // M
-  {B1001, B1111, B1111, B1001, B1001, B1001, B1001},
+  {B10001, B11011, B10101, B10001, B10001, B10001, B10001},
   // N
-  {B1001, B1001, B1101, B1101, B1011, B1011, B1001},
+  {B10001, B10001, B11001, B10101, B10011, B10001, B10001},
   // O
-  {B0110, B1001, B1001, B1001, B1001, B1001, B0110},
+  {B01110, B10001, B10001, B10001, B10001, B10001, B01110},
   // P
-  {B1110, B1001, B1001, B1110, B1000, B1000, B1000},
+  {B11110, B10001, B10001, B11110, B10000, B10000, B10000},
   // Q
-  {B0110, B1001, B1001, B1001, B1011, B1001, B0111},
+  {B01110, B10001, B10001, B10001, B10101, B10010, B01101},
   // R
-  {B1110, B1001, B1001, B1110, B1010, B1001, B1001},
+  {B11110, B10001, B10001, B11110, B10100, B10010, B10001},
   // S
-  {B0111, B1000, B1000, B0110, B0001, B0001, B1110},
+  {B01111, B10000, B10000, B01110, B00001, B00001, B11110},
   // T
-  {B1111, B0010, B0010, B0010, B0010, B0010, B0010},
+  {B11111, B00100, B00100, B00100, B00100, B00100, B00100},
   // U
-  {B1001, B1001, B1001, B1001, B1001, B1001, B0110},
+  {B10001, B10001, B10001, B10001, B10001, B10001, B01110},
   // V
-  {B1001, B1001, B1001, B1001, B1001, B0110, B0010},
+  {B10001, B10001, B10001, B10001, B10001, B01010, B00100},
   // W
-  {B1001, B1001, B1001, B1001, B1111, B1111, B1001},
+  {B10001, B10001, B10001, B10001, B10101, B11011, B10001},
   // X
-  {B1001, B1001, B0110, B0010, B0110, B1001, B1001},
+  {B10001, B10001, B01010, B00100, B01010, B10001, B10001},
   // Y
-  {B1001, B1001, B1001, B0110, B0010, B0010, B0010},
+  {B10001, B01010, B00100, B00100, B00100, B00100, B00100},
   // Z
-  {B1111, B0001, B0010, B0100, B1000, B1000, B1111}
+  {B11111, B00001, B00010, B00100, B01000, B10000, B11111}
 };
 
 // === Convert char to font index ===
@@ -82,14 +82,14 @@ void setup() {
 
   pinMode(irSensorPin, INPUT_PULLUP);
   Serial.begin(9600);
-  Serial.println("POV display ready (4x7 font).");
+  Serial.println("POV display ready (5x7 font).");
 }
 
 void loop() {
   static bool waitingForIR = true;
 
   if (waitingForIR && digitalRead(irSensorPin) == LOW) {
-    displayMessage("SUCCESS");
+    displayMessage("KIRAN");
     waitingForIR = false;
   }
 
@@ -101,8 +101,8 @@ void loop() {
 void displayMessage(const char* msg) {
   for (int i = 0; msg[i] != '\0'; i++) {
     int index = charToIndex(msg[i]);
-    byte transposed[7];
-    transposeChar(font[index], transposed);   // Transpose row-wise to column-wise
+    byte transposed[LETTER_WIDTH];
+    transposeChar(font[index], transposed);
 
     for (int col = 0; col < LETTER_WIDTH; col++) {
       displayColumn(transposed[col]);
@@ -120,11 +120,11 @@ void displayColumn(byte rowData) {
   }
 }
 
-void transposeChar(const byte input[7], byte output[7]) {
+void transposeChar(const byte input[7], byte output[LETTER_WIDTH]) {
   for (int col = 0; col < LETTER_WIDTH; col++) {
     output[col] = 0;
     for (int row = 0; row < 7; row++) {
-      bool bit = bitRead(input[row], 3 - col);   // now only 4 columns per row
+      bool bit = bitRead(input[row], 4 - col); // Now 5 bits per row
       bitWrite(output[col], 6 - row, bit);
     }
   }
