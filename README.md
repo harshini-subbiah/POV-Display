@@ -46,8 +46,8 @@ This project implements a POV Display using an Arduino Nano and a rotating set o
 3.Connect the Bluetooth module to the app. It will appear as HC-05 and the password will either be 1234 or 0000.
 
 # 🖼 Circuit Diagram
+<img width="749" height="519" alt="image" src="https://github.com/user-attachments/assets/a7856633-c1e3-4a41-a56f-2952aa8f6bd2" />
 
-https://github.com/harshini-subbiah/POV-Display/blob/main/Circuit.jpg 
 
 # 🤝 Contributing
 1. S Harini - https://github.com/harinisubbiah 
