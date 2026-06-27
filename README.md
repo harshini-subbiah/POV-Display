@@ -50,11 +50,11 @@ This project implements a POV Display using an Arduino Nano and a rotating set o
 https://github.com/harshini-subbiah/POV-Display/blob/main/Circuit.jpg 
 
 # 🤝 Contributing
-1. S Harini - https://github.com/harinisubbiah
-   
+1. S Harini - https://github.com/harinisubbiah 
+
 2.Kiran Sampath -
 
-3.Krithikesh -  https://github.com/krithikeshI
+3.Krithikesh -  https://github.com/krithikeshI 
 
 # Mentors
 1. Mr.Suresh Sir
